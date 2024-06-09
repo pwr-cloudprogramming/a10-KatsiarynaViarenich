@@ -33,11 +33,24 @@
             }
             return null;
         }
+        
+        function getCookieEmail(cookieName) {
+            const cookieValue = getCookie(cookieName);
+            if (cookieValue) {
+                // Decode the URL encoded cookie value
+                const decodedCookieValue = decodeURIComponent(cookieValue);
+                const emailObject = JSON.parse(decodedCookieValue);
+                const email = emailObject.userEmail;
+                return email;
+            }
+            return null;
+        }
 
         function setLoginFromCookie() {
-            let loginCookie = getCookie("userEmail2");
+            let loginCookie = getCookieEmail("userEmail");
             if (loginCookie) {
                 document.getElementById("login").value = loginCookie;
+                
             }
         }
 
