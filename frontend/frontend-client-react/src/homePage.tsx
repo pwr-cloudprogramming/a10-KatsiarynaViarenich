@@ -35,7 +35,7 @@ const HomePage = () => {
 /*eslint-enable*/
   const userEmail = idToken.email;
   const cookies = new Cookies();
-  cookies.set('userEmail2', {userEmail}, { path: '/' });
+  cookies.set('userEmail', {userEmail}, { path: '/' });
 
   return (
     <div>
