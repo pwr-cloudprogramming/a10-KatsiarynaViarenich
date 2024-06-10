@@ -20,7 +20,7 @@ Kiedy udało się uruchomić tworzenie poola użytkowników (w kodzie to jest re
 
 W moim kodzie plik config.json odpowiada za dane wymagane do połączenia do cognito: clientId, region, userPoolId. Wiadomo, że pobierając z git'a kod, nie mogłam pobrać danych o utworzonej przez terraform puli użytkowników.
 
-Aby rozwiązać ten problem zrobiłam:
+Aby rozwiązać ten problem wykonałam następne działania:
 
 1. Utowrzyłam config.json lokalnie:
 
