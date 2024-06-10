@@ -57,14 +57,20 @@ resource "local_file" "config_json" {
 cp -f config.json a10-KatsiarynaViarenich/frontend/frontend-client-react/src
 ```
 
-Po dużej liczbie nieudanych próbach, udało się uruchomić taki kod. 
+Po dużej liczbie nieudanych prób, udało się uruchomić taki kod. 
 
 I wtedy nastąpił kolejny, ostatni problem: aplikacja nie wysyłała kod potwierdzenia po rejestracji nowego użytkownika.
 
 Okazało się, że problem tkwił w braku uprawnień - udało się to rozwiązać, dodając następne linijki do konfiguracji w terraform:
 
 ```terraform
-zaraz wkleję
+  verification_message_template {
+    default_email_option = "CONFIRM_WITH_CODE"
+    email_subject = "Your verification code"
+    email_message = "Your verification code is {####}"
+  }
+
+  auto_verified_attributes = ["email"]
 ```
 
 
