@@ -52,7 +52,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
   cidr_ipv4         = "0.0.0.0/0"
   ip_protocol       = "tcp"
   from_port         = 8080
-  to_port           = 8081
+  to_port           = 8082
 }
 
 resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
@@ -62,6 +62,52 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
   from_port         = 22
   to_port           = 22
 }
+
+resource "aws_cognito_user_pool_client" "client" {
+  name = "A10_game"
+
+  user_pool_id = aws_cognito_user_pool.pool.id
+
+  generate_secret     = false
+  explicit_auth_flows = ["ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_SRP_AUTH", "ALLOW_USER_PASSWORD_AUTH"]
+}
+
+resource "aws_cognito_user_pool" "pool" {
+  name = "A10_game"
+  alias_attributes = ["preferred_username"]
+
+  username_configuration {
+    case_sensitive = false
+  }
+
+  mfa_configuration = "OFF"
+
+  account_recovery_setting {
+    recovery_mechanism {
+      name     = "verified_email"
+      priority = 1
+    }
+  }
+
+  verification_message_template {
+    default_email_option = "CONFIRM_WITH_CODE"
+    email_subject = "Your verification code"
+    email_message = "Your verification code is {####}"
+    sms_message = "Your verification code is {####}"
+  }
+
+  auto_verified_attributes = ["email"]
+}
+
+resource "local_file" "config_json" {
+  content = jsonencode({
+    region = "us-east-1"
+    userPoolId = aws_cognito_user_pool.pool.id
+    clientId   = aws_cognito_user_pool_client.client.id
+  })
+  filename = "${path.module}/frontend/frontend-client-react/src/config.json"
+}
+
 
 resource "aws_instance" "tf-web-server" {
   ami                         = "ami-080e1f13689e07408"
@@ -74,5 +120,17 @@ resource "aws_instance" "tf-web-server" {
   user_data_replace_on_change = true
   tags = {
     Name = "A5"
+  }
+  
+  provisioner "file" {
+    source      = "${path.module}/frontend/frontend-client-react/src/config.json"
+    destination = "/home/ubuntu/config.json"
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ubuntu"
+    private_key = file("~/environment/aws-lab.3/labsuser10.pem")
+    host        = self.public_ip
   }
 }
