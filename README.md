@@ -5,7 +5,7 @@ Zdecydowałam, że wykorzystam do procesu logowania i rejestracji interfejs z pr
 Czyli, do urochomenia aplikacji potrzebowałam czterech rzeczy:
 1. Uruchomienie aplikacji React na poprawnym porcie
 2. Po udanym zalogowaniu przekierowanie użytkownika do głównej strony gry
-3. W tym, przekazanie logina użytkownika po załogowaniu
+3. W tym, przekazanie logina użytkownika
 4. Tworzenie poprawnie działającego poola uzytkowników za pomocą terraform.
 
 Podczas robienia punktów 1 i 2 duże problemy nie wystąpiły. W punkcie 3 podczas odczytywania z cookies logina (czyli  adresu email) pojawił się problem z formatowanie plików cookie - pojawiły się symbole "%20", "%40", psujące ogólny wygląd logina użytkownika. Udało się rozwiązać ten problem za pomocą dwóch funkcji: 
